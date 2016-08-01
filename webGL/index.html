@@ -1,0 +1,315 @@
+<html>
+	<head>
+		<title>My first Three.js app</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.min.js"></script>
+		<script src= "threex.keyboardstate.js"></script>
+		<script>
+				var scene = new THREE.Scene();
+				var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+				var updateFcts=[];
+				var renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+	/*			var geometry = new THREE.BoxGeometry( 75, 1, 75 );
+				
+				var cube = new THREE.Mesh( geometry, material );
+				scene.add( cube );*/
+
+			    var light = new THREE.DirectionalLight( 0xffffff );
+			    light.position.set( 0, 1, 1 ).normalize();
+			    scene.add(light);
+
+			  	/* BOARD */
+			    var geometry = new THREE.CubeGeometry( 90, 2, 90);
+			    var texture = THREE.ImageUtils.loadTexture('images/board1.jpg');
+			  	var material = new THREE.MeshPhongMaterial( { map: texture } );
+			    board = new THREE.Mesh(geometry, material );
+			    scene.add( board );
+
+			    /*border*/
+			    var geometry1 = new THREE.CubeGeometry(92,4,4);
+			    var geometry2 = new THREE.CubeGeometry(4,4,96);
+			    var texture1 = THREE.ImageUtils.loadTexture('images/wood.jpg');
+			    var material1 = new THREE.MeshBasicMaterial( { map:texture1 } );
+			    var border1 = new THREE.Mesh(geometry1,material1);
+			    border1.position.z=46;
+			    scene.add(border1);
+
+			    var border2 = new THREE.Mesh(geometry1,material1);
+			    border2.position.z=-46;
+			    scene.add(border2);
+
+			    var border3 = new THREE.Mesh(geometry2,material1);
+			    border3.position.x=-46;
+			    scene.add(border3);
+
+			    var border4 = new THREE.Mesh(geometry2,material1);
+			    border4.position.x=46;
+			    scene.add(border4);
+			    /*border*/
+
+			    /*Striker*/
+			    var geometry3 = new THREE.CylinderGeometry( 4, 4, 1, 32 );
+			    var Striker = new THREE.Mesh(geometry3,material1);
+			    Striker.position.y=1.5;
+			    Striker.position.z=30;
+			    scene.add(Striker);
+			    var Striker_rotation = 0;
+			    var init_striker = function(){
+			    	Striker.position.z=30;
+			    }
+			    var position_x=0;
+			    var position_z=30;
+			    /*Striker*/
+			    /*power*/
+			    var g = new THREE.CubeGeometry(4,1,4);
+			    power = new THREE.Mesh(g,texture);
+			    /*power*/
+			    /*Holes*/
+			    var geometry4 = new THREE.CylinderGeometry(5,5,2,32);
+			    var texture3 = THREE.ImageUtils.loadTexture('images/net.jpg');
+			    var material3 =  new THREE.MeshBasicMaterial( { map:texture3 } );
+			    var Hole1 = new THREE.Mesh(geometry4,material3);
+			    Hole1.position.z=39;
+			    Hole1.position.x=-39;
+			    Hole1.position.y=0.01;
+			    scene.add(Hole1);
+
+			    //var geometry4 = new THREE.CylinderGeometry(5,5,2,32);
+			    var Hole2 = new THREE.Mesh(geometry4,material3);
+			    Hole2.position.z=39;
+			    Hole2.position.x=39;
+			    Hole2.position.y=0.01;
+			    scene.add(Hole2);
+
+			    var Hole3 = new THREE.Mesh(geometry4,material3);
+			    Hole3.position.z=-39;
+			    Hole3.position.x=39;
+			    Hole3.position.y=0.01;
+			    scene.add(Hole3);
+
+			    var Hole4 = new THREE.Mesh(geometry4,material3);
+			    Hole4.position.z=-39;
+			    Hole4.position.x=-39;
+			    Hole4.position.y=0.01;
+			    scene.add(Hole4);
+			    /*Holes*/
+			    /*Coins*/
+			    var gmtry= new THREE.CylinderGeometry(4,4,2,32);
+			    var txtr1 = THREE.ImageUtils.loadTexture('images/white.jpg');
+			    var mtrl1 = new THREE.MeshBasicMaterial( { map:txtr1 } );
+			    var coin1 = new THREE.Mesh(gmtry,mtrl1);
+			    coin1.position.y=1.5;
+			    var coin2 = new THREE.Mesh(gmtry,mtrl1);
+			    coin2.position.y=1.5;
+			    coin2.position.z=8;
+			    scene.add(coin2);
+			    var coin3 = new THREE.Mesh(gmtry,mtrl1);
+			    coin3.position.y=1.5;
+			    coin3.position.z=-8;
+			    scene.add(coin3);
+			    scene.add(coin1);
+
+			    var txtr2 = THREE.ImageUtils.loadTexture('images/black.jpg');
+			    var mtrl2 = new THREE.MeshBasicMaterial( { map:txtr2 } );
+			    var coin4 = new THREE.Mesh(gmtry,mtrl2);
+			    coin4.position.y= 1.5;
+			    coin4.position.x= -8;
+			    scene.add(coin4);
+
+			    var coin5 = new THREE.Mesh(gmtry,mtrl2);
+			    coin5.position.y= 1.5;
+			    coin5.position.x= 8;
+			    scene.add(coin5);
+
+			    /*Coins*/
+			    /*arrow*/
+			    var geometry5 = new THREE.BoxGeometry( 0.5,0.5,80 );
+	            var material = new THREE.MeshLambertMaterial( { color: 0xFF0000 } );
+	            var mesh = new THREE.Mesh( geometry5, material);
+	            mesh.position.y=1.5
+	            //scene.add( mesh );
+			    /*arrows*/
+			    /*power*/
+			    var geometry6 = new THREE.BoxGeometry(20,2,4);
+			    var power = new THREE.Mesh( geometry6,material);
+			    power.position.z=-52;
+
+			    scene.add(power);
+			    /*power*/
+			    /*camera_flags*/
+			    var flag=0;
+			    var velocity=0;
+			    var fix=0;
+			    var count=0;
+			    /*camera_flags*/
+
+			    var topview=function(){
+				camera.position.set(0,20,81);
+				camera.up = new THREE.Vector3(0,1,0);
+				camera.lookAt(new THREE.Vector3(0,0,0));
+			}
+			var upview=function(){
+				camera.position.set(0,75,0);
+				camera.up = new THREE.Vector3(0,0,-1);
+				camera.lookAt(new THREE.Vector3(0,0,0));
+			}
+			    /*Keyboard*/
+			    var keyboard	= new THREEx.KeyboardState(renderer.domElement);
+				renderer.domElement.setAttribute("tabIndex", "0");
+				renderer.domElement.focus();
+				
+				updateFcts.push(function(delta, now){
+					if( keyboard.pressed('left') ){
+						if(Striker.position.x > -35 && fix==0)
+							Striker.translateX(-1);
+						if (fix==1)
+						{
+							Striker_rotation+=0.02;
+							mesh.rotateY(0.02);
+							Striker.rotateY(0.02)
+						}	
+					}else if( keyboard.pressed('right') ){
+						if(Striker.position.x< 35 && fix==0)
+							Striker.translateX(1);
+						if(fix==1)
+						{
+							Striker_rotation-=0.02;
+							mesh.rotateY(-0.02);
+							Striker.rotateY(-0.02);
+						}
+					}
+					if( keyboard.pressed('s') ){
+						//camera.translateZ(2);		
+					}else if( keyboard.pressed('w') ){
+						//camera.translateZ(-2);
+								
+					}
+					if ( keyboard.pressed('a')){
+						//camera.translateX(-2);
+					}
+					if (keyboard.pressed('d')){
+						//camera.translateX(2);
+					}
+					if(keyboard.pressed('t')){
+						flag=1;
+					}
+					if(keyboard.pressed('u')){
+						flag=0;
+					}
+					if(keyboard.pressed('w')){
+						if(fix==1 && velocity<6)
+						{
+							power.scale.x=1.25;
+							velocity+=0.25;
+						}
+					}
+					if(keyboard.pressed('space')){
+						if(fix==0)
+							fix=1;
+					}
+				})
+				// only on keydown
+				keyboard.domElement.addEventListener('keydown', function(event){
+					if( keyboard.eventMatches(event, 'w') ){
+					}
+					if( keyboard.eventMatches(event, 's') ) Striker.translateZ(2);
+				})
+				// only on keyup
+				keyboard.domElement.addEventListener('keyup', function(event){
+					if( keyboard.eventMatches(event, 'w') ){
+						if(fix==1)
+							fix=2;
+					}
+					if( keyboard.eventMatches(event, 'd') )	;
+				})
+				//////////////////////////////////////////////////////////////////////////////////
+				//		render the scene						//
+				//////////////////////////////////////////////////////////////////////////////////
+				updateFcts.push(function(){
+					renderer.render( scene, camera );		
+				})
+				//////////////////////////////////////////////////////////////////////////////////
+				//		loop runner							//
+				//////////////////////////////////////////////////////////////////////////////////
+				var lastTimeMsec= null
+				var temp=0;
+				requestAnimationFrame(function animate(nowMsec){
+					if(flag==1)
+						topview();
+					else if(flag==0)
+						upview();
+					if(fix==1)
+					{
+						power.scale.x=1.25;
+						mesh.position.z=Striker.position.z;
+						mesh.position.x=Striker.position.x;
+						if(count==0)
+						{
+							count=1;
+							scene.add(mesh);
+						}
+					}
+					// keep looping
+					requestAnimationFrame( animate );
+					// measure time
+					lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+					var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+					lastTimeMsec	= nowMsec
+					if(fix==2 && velocity>0.5)
+					{
+						mesh.position.z=100;
+						mesh.position.x=1000;
+					/*	if(Striker.position.z > -35/Math.sin(Striker_rotation))
+						{
+							Striker.rotateY(2*Striker_rotation);
+							Striker_rotation+=2*Striker_rotation;
+						}*/
+						position_x+=-velocity*Math.sin(Striker_rotation);
+						position_z-=velocity*Math.cos(Striker_rotation);
+						if(position_x< -41 || position_x > 41 || position_z >39)
+						{
+							temp=Striker_rotation;
+							Striker.rotateY(-2*Striker_rotation);
+							Striker_rotation+=-2*Striker_rotation;
+						}
+						Striker.translateZ(-velocity);
+						//Striker.translateX(velocity*Math.cos(Striker_rotation));
+						velocity-=0.25;
+					}
+					else if(fix==2 && velocity<=0.5)
+					{
+						if(temp!=0)
+						{
+							mesh.rotateY(-temp);
+							temp=0;
+						}
+						else
+							mesh.rotateY(-Striker_rotation);
+						position_x=0;
+						position_z=34;
+						Striker.rotateY(-Striker_rotation);
+						//Striker.rotateY(0.2);
+						Striker.velocity=0;
+						Striker.position.z=30;
+						Striker.position.x=0;
+						Striker_rotation=0;
+						fix=0;
+					}
+					// call each update function
+					updateFcts.forEach(function(updateFn){
+						updateFn(deltaMsec/1000, nowMsec/1000)
+					})
+				})
+				render();
+
+			</script>
+	</body>
+</html>
